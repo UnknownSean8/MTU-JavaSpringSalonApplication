@@ -23,7 +23,7 @@ public class Config {
     public MessageSource messageSource() {
         ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
         messageSource.setBasenames("errors", "messages");
-        messageSource.setDefaultLocale(Locale.FRENCH);
+        messageSource.setDefaultLocale(Locale.getDefault());
         return messageSource;
     }
 

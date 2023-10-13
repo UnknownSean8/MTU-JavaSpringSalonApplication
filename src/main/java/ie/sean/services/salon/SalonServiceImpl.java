@@ -17,8 +17,11 @@ import java.util.stream.Collectors;
 @Service
 public class SalonServiceImpl implements SalonService {
 
-    @Autowired
-    private SalonDao salonDao;
+    private final SalonDao salonDao;
+
+    public SalonServiceImpl(SalonDao salonDao) {
+        this.salonDao = salonDao;
+    }
 
     @Autowired
     private ApplicationContext applicationContext;
@@ -61,8 +64,7 @@ public class SalonServiceImpl implements SalonService {
     }
 
     @Override
-    @SneakyThrows
-    public void updateOneOnOpenDays(int id, String newOpenDays) {
+    public void updateOneOnOpenDays(int id, String newOpenDays) throws SalonMalformedException, SalonNotFoundException {
         // if newOpenDays is blank
         if (newOpenDays.isBlank())
             throw new SalonMalformedException(applicationContext.getMessage("SalonOpenDaysBlank", null, Locale.getDefault()));
@@ -75,12 +77,20 @@ public class SalonServiceImpl implements SalonService {
 
     // TODO: CRUD return practice, find return Object, save, update and delete return void?
     @Override
+    @SneakyThrows
     public void deleteById(int id) {
+        if (salonDao.findSalonById(id).isEmpty())
+            throw new SalonNotFoundException(applicationContext.getMessage("SalonIdNotFound", new Object[]{id}, Locale.getDefault()));
+
         salonDao.deleteById(id);
     }
 
     @Override
+    @SneakyThrows
     public List<Salon> findSalonsOnDaysOpen(int daysOpen) {
+        if (daysOpen > 7)
+            throw new SalonMalformedException(applicationContext.getMessage("SalonDaysOpenMoreThanSeven", null, Locale.getDefault()));
+
         return this.findAll().stream().filter(salon -> {
             return ((int) (salon.getDays_open().chars().filter(c -> c == '1').count())) >= daysOpen;
         }).collect(Collectors.toList());

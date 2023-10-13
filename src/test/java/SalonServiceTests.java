@@ -33,12 +33,12 @@ public class SalonServiceTests {
     public void testCreateANewSalon() {
         int oldCount = salonService.count();
 
-        Salon newSalon = new Salon(oldCount + 1, "Salon" + (oldCount+1), "Cork, Ireland", 1234567890, "1111100");
+        Salon newSalon = new Salon(oldCount + 1, "Salon " + (oldCount + 1), "Cork, Ireland", 1234567890, "1111100");
         salonService.insertOne(newSalon);
 
-        Assertions.assertEquals(oldCount+1, salonService.count());
-        Assertions.assertNotNull(salonService.findSalonById(oldCount+1));
-        Assertions.assertEquals(oldCount+1, salonService.findSalonById(oldCount+1).getId());
+        Assertions.assertEquals(oldCount + 1, salonService.count());
+        Assertions.assertNotNull(salonService.findSalonById(oldCount + 1));
+        Assertions.assertEquals(oldCount + 1, salonService.findSalonById(oldCount + 1).getId());
     }
 
     @Test
@@ -88,7 +88,7 @@ public class SalonServiceTests {
 
     @Test
     @Order(5)
-    public void testUpdateSalonOpenDays() {
+    public void testUpdateSalonOpenDays() throws SalonMalformedException, SalonNotFoundException {
         int changeId = 1;
 //        int oldOpenDays = salonService.findSalonById(changeId).getDays_open();
         String newOpenDays = "1111100";
@@ -134,14 +134,28 @@ public class SalonServiceTests {
     }
 
     @Test
+    @Order(6)
+    public void testDeleteSalonIdNotFound() {
+        int deleteId = 0;
+
+        Assertions.assertThrows(SalonNotFoundException.class, () -> salonService.deleteById(deleteId));
+    }
+
+    @Test
     @Order(7)
     public void testFindSalonThatOpen7DaysAWeek() {
         List<Salon> salons = salonService.findSalonsOnDaysOpen(7);
 
-        salons.forEach((salon) -> Assertions.assertEquals(1111111, salon.getDays_open()));
+        salons.forEach((salon) -> Assertions.assertEquals("1111111", salon.getDays_open()));
+    }
+
+    @Test
+    @Order(7)
+    public void testFindSalonThatOpenMoreThan7DaysAWeek() {
+        int daysOpen = 8;
+        Assertions.assertThrows(SalonMalformedException.class, () -> salonService.findSalonsOnDaysOpen(daysOpen));
     }
 }
-
 
 
 //    @Nested

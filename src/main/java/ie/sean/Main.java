@@ -50,7 +50,7 @@ public class Main {
 
         System.out.println("Get salon by its primary key (id)");
         System.out.println("=================================");
-        int salonId = 7;
+        int salonId = 1;
         System.out.println("Input: " + Integer.toString(salonId));
         System.out.println(salonService.findSalonById(salonId));
         System.out.println();
