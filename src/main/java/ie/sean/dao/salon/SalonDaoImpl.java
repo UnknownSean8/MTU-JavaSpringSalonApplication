@@ -16,19 +16,16 @@ import java.util.Optional;
 @Repository
 public class SalonDaoImpl implements SalonDao {
     @Autowired
-    private JdbcTemplate jdbcTemplate;
-
-    @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     @Override
     public int count() {
-        return jdbcTemplate.queryForObject("SELECT count(*) FROM salons", Integer.class);
+        return namedParameterJdbcTemplate.getJdbcTemplate().queryForObject("SELECT count(*) FROM salons", Integer.class);
     }
 
     @Override
     public List<Salon> findAll() {
-        return jdbcTemplate.query("SELECT * FROM salons", new SalonRowMapper());
+        return namedParameterJdbcTemplate.getJdbcTemplate().query("SELECT * FROM salons", new SalonRowMapper());
     }
 
     @Override

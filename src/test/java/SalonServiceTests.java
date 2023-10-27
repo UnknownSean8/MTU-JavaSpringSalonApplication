@@ -30,10 +30,10 @@ public class SalonServiceTests {
 
     @Test
     @Order(2)
-    public void testCreateANewSalon() {
+    public void testCreateANewSalon() throws SalonMalformedException, SalonNotFoundException, SalonDuplicateKeyException {
         int oldCount = salonService.count();
 
-        Salon newSalon = new Salon(oldCount + 1, "Salon " + (oldCount + 1), "Cork, Ireland", 1234567890, "1111100");
+        Salon newSalon = new Salon(oldCount + 1, "Salon " + (oldCount + 1), "Cork, Ireland", "1234567890", "1111100");
         salonService.insertOne(newSalon);
 
         Assertions.assertEquals(oldCount + 1, salonService.count());
@@ -44,14 +44,14 @@ public class SalonServiceTests {
     @Test
     @Order(2)
     public void testCreateClashPK() {
-        Salon newSalon = new Salon(1, "Salon 1", "Cork, Ireland", 1234567890, "1111100");
+        Salon newSalon = new Salon(1, "Salon 1", "Cork, Ireland", "1234567890", "1111100");
 
         Assertions.assertThrows(SalonDuplicateKeyException.class, () -> salonService.insertOne(newSalon));
     }
 
     @Test
     @Order(3)
-    public void testFindAllSalonByName() {
+    public void testFindAllSalonByName() throws SalonMalformedException {
         String salonName = "Salon 1";
 
         Assertions.assertNotNull(salonName);
@@ -69,7 +69,7 @@ public class SalonServiceTests {
 
     @Test
     @Order(4)
-    public void testFindSalonByPK() {
+    public void testFindSalonByPK() throws SalonMalformedException, SalonNotFoundException {
         int primaryKey = 1;
 
         Salon salon = salonService.findSalonById(primaryKey);
@@ -90,7 +90,6 @@ public class SalonServiceTests {
     @Order(5)
     public void testUpdateSalonOpenDays() throws SalonMalformedException, SalonNotFoundException {
         int changeId = 1;
-//        int oldOpenDays = salonService.findSalonById(changeId).getDays_open();
         String newOpenDays = "1111100";
 
         salonService.updateOneOnOpenDays(changeId, newOpenDays);
@@ -118,7 +117,7 @@ public class SalonServiceTests {
 
     @Test
     @Order(6)
-    public void testDeleteSalon() {
+    public void testDeleteSalon() throws SalonMalformedException, SalonNotFoundException {
         int deleteId = 1;
 
         // Check if id exists
@@ -143,7 +142,7 @@ public class SalonServiceTests {
 
     @Test
     @Order(7)
-    public void testFindSalonThatOpen7DaysAWeek() {
+    public void testFindSalonThatOpen7DaysAWeek() throws SalonMalformedException {
         List<Salon> salons = salonService.findSalonsOnDaysOpen(7);
 
         salons.forEach((salon) -> Assertions.assertEquals("1111111", salon.getDays_open()));

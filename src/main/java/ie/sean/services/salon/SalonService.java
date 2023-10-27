@@ -1,6 +1,7 @@
 package ie.sean.services.salon;
 
 import ie.sean.entities.salon.Salon;
+import ie.sean.exceptions.salon.SalonDuplicateKeyException;
 import ie.sean.exceptions.salon.SalonMalformedException;
 import ie.sean.exceptions.salon.SalonNotFoundException;
 
@@ -12,15 +13,15 @@ public interface SalonService {
 
     List<Salon> findAll();
 
-    void insertOne(Salon newSalon);
+    void insertOne(Salon newSalon) throws SalonDuplicateKeyException, SalonMalformedException;
 
-    List<Salon> findAllByName(String name);
+    List<Salon> findAllByName(String name) throws SalonMalformedException;
 
-    Salon findSalonById(int id);
+    Salon findSalonById(int id) throws SalonMalformedException, SalonNotFoundException;
 
     void updateOneOnOpenDays(int id, String newOpenDays) throws SalonMalformedException, SalonNotFoundException;
 
-    void deleteById(int id);
+    void deleteById(int id) throws SalonNotFoundException;
 
-    List<Salon> findSalonsOnDaysOpen(int daysOpen);
+    List<Salon> findSalonsOnDaysOpen(int daysOpen) throws SalonMalformedException;
 }

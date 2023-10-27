@@ -14,14 +14,13 @@ public class Salon {
     private int id;
     private String name;
     private String address;
-    private int phone_number;
+    private String phone_number;
     private String days_open;
 
     public String[] daysOpenInString(String days_open) {
         String[] daysOfWeek = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
 
         char[] seperatedDaysOpen = days_open.toCharArray();
-        System.out.println(Arrays.toString(seperatedDaysOpen));
         return IntStream.range(0, seperatedDaysOpen.length).filter(i -> (seperatedDaysOpen[i] == '1')).mapToObj(i -> daysOfWeek[i]).toArray(String[]::new);
     }
 

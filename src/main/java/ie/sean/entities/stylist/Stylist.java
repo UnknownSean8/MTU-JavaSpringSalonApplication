@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 public class Stylist {
     private int id;
     private String name;
-    private int phone_number;
+    private String phone_number;
     private int salary;
     private int salon_id;
 }

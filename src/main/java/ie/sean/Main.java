@@ -1,12 +1,13 @@
 package ie.sean;
 
-import ie.sean.dao.salon.SalonDao;
-import ie.sean.dao.salon.SalonDaoImpl;
 import ie.sean.entities.salon.Salon;
 import ie.sean.services.salon.SalonService;
 import ie.sean.services.salon.SalonServiceImpl;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+
+import java.util.Locale;
 
 // Press Shift twice to open the Search Everywhere dialog and type `show whitespaces`,
 // then press Enter. You can now see whitespace characters in your code.
@@ -15,49 +16,74 @@ public class Main {
         System.setProperty("spring.profiles.active", "test");
 
         ApplicationContext applicationContext = new AnnotationConfigApplicationContext(Config.class);
+        System.out.println(applicationContext.getMessage("messages.numberOfRows",null, Locale.FRENCH));
 
-//        SalonDao salonDao = applicationContext.getBean(SalonDaoImpl.class);
         SalonService salonService = applicationContext.getBean(SalonServiceImpl.class);
 
-        System.out.println("Print the number of rows in the salon table.");
+        System.out.println(applicationContext.getMessage("messages.numberOfRows", null, Locale.getDefault()));
         System.out.println("============================================");
         System.out.println(salonService.count());
         System.out.println();
 
-        System.out.println("Print all the row in the salon table");
+        System.out.println(applicationContext.getMessage("messages.printAllRows", null, Locale.getDefault()));
         System.out.println("====================================");
         salonService.findAll().forEach(System.out::println);
         System.out.println();
 
-        System.out.println("Create a new salon providing all data");
+        System.out.println(applicationContext.getMessage("messages.createANewSalon", null, Locale.getDefault()));
         System.out.println("=====================================");
-        System.out.println("Original salon table");
+        System.out.println(applicationContext.getMessage("messages.originalSalonTable", null, Locale.getDefault()));
         System.out.println("--------------------");
         salonService.findAll().forEach(System.out::println);
-        Salon salon = new Salon(6, "Salon 6", "Cork, Ireland", 1234567890, "1111100");
-        salonService.insertOne(salon);
-        System.out.println("Updated salon table");
+        Salon salon = new Salon(5, "Salon 6", "Cork, Ireland", "1234567890", "1111100");
+        try {
+            salonService.insertOne(salon);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        System.out.println(applicationContext.getMessage("messages.updatedSalonTable", null, Locale.getDefault()));
         System.out.println("-------------------");
         salonService.findAll().forEach(System.out::println);
         System.out.println();
 
-        System.out.println("Get all the salons by name");
+        System.out.println(applicationContext.getMessage("messages.getAllSalonsByName", null, Locale.getDefault()));
         System.out.println("==========================");
-        String salonName = "Burger King";
+        String salonName = "Salon 1";
         System.out.println("Input: " + salonName);
-        salonService.findAllByName(salonName).forEach(System.out::println);
+        try {
+            salonService.findAllByName(salonName).forEach(System.out::println);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
         System.out.println();
 
-        System.out.println("Get salon by its primary key (id)");
+        System.out.println(applicationContext.getMessage("messages.getAllSalonByPK", null, Locale.getDefault()));
         System.out.println("=================================");
-        int salonId = 1;
-        System.out.println("Input: " + Integer.toString(salonId));
-        System.out.println(salonService.findSalonById(salonId));
+        int salonId = 6;
+        System.out.println("Input: " + salonId);
+        try {
+            System.out.println(salonService.findSalonById(salonId));
+        } catch(Exception e) {
+            System.out.println(e);
+        }
         System.out.println();
 
-        System.out.println("List all those salons open 7 days a week.");
+        System.out.println(applicationContext.getMessage("messages.listSalonOpen7Days", null, Locale.getDefault()));
         System.out.println("=========================================");
-        salonService.findSalonsOnDaysOpen(7).forEach(System.out::println);
+        try {
+            salonService.findSalonsOnDaysOpen(7).forEach(System.out::println);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        System.out.println();
+
+        System.out.println(applicationContext.getMessage("messages.listSalonOpen7Days", null, Locale.getDefault()));
+        System.out.println("=========================================");
+        try {
+            salonService.findSalonsOnDaysOpen(8).forEach(System.out::println);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
         System.out.println();
     }
 }
